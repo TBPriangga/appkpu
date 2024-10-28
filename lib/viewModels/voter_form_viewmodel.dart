@@ -21,19 +21,73 @@ class VoterFormViewModel {
   double? longitude;
   bool isLoading = false;
 
+  bool isAllFieldFilled() {
+    return nikController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        phoneController.text.isNotEmpty &&
+        selectedGender != null &&
+        selectedDate != null &&
+        addressController.text.isNotEmpty &&
+        imagePath != null;
+  }
+
+  List<String> getEmptyFields() {
+    List<String> emptyFields = [];
+
+    if (nikController.text.isEmpty) {
+      emptyFields.add('NIK');
+    }
+    if (nameController.text.isEmpty) {
+      emptyFields.add('Nama Lengkap');
+    }
+    if (phoneController.text.isEmpty) {
+      emptyFields.add('Nomor HP');
+    }
+    if (selectedGender == null) {
+      emptyFields.add('Jenis Kelamin');
+    }
+    if (selectedDate == null) {
+      emptyFields.add('Tanggal');
+    }
+    if (addressController.text.isEmpty) {
+      emptyFields.add('Alamat');
+    }
+    if (imagePath == null) {
+      emptyFields.add('Foto');
+    }
+
+    return emptyFields;
+  }
+
   String? validateNIK(String? value) {
     if (value == null || value.isEmpty) {
-      return 'NIK tidak boleh kosong';
+      return 'NIK wajib diisi';
     }
     if (value.length != 16) {
       return 'NIK harus 16 digit';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'NIK hanya boleh berisi angka';
+    }
+    return null;
+  }
+
+  String? validatePhone(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Nomor HP wajib diisi';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Nomor HP hanya boleh berisi angka';
+    }
+    if (value.length < 10 || value.length > 13) {
+      return 'Nomor HP harus 10-13 digit';
     }
     return null;
   }
 
   String? validateRequired(String? value, String field) {
     if (value == null || value.isEmpty) {
-      return '$field tidak boleh kosong';
+      return '$field wajib diisi';
     }
     return null;
   }
@@ -53,9 +107,16 @@ class VoterFormViewModel {
     }
   }
 
-// Di VoterFormViewModel
   Future<bool> submitForm() async {
-    if (!formKey.currentState!.validate()) return false;
+    // Validasi semua field terlebih dahulu
+    final emptyFields = getEmptyFields();
+    if (emptyFields.isNotEmpty) {
+      return false;
+    }
+
+    if (!formKey.currentState!.validate()) {
+      return false;
+    }
 
     isLoading = true;
 
@@ -74,11 +135,7 @@ class VoterFormViewModel {
         longitude: longitude,
       );
 
-      print('Saving voter data: ${voter.toMap()}'); // Tambahkan ini
-
-      final result = await _voterService.insert(voter);
-      print('Save result: $result'); // Tambahkan ini
-
+      await _voterService.insert(voter);
       resetForm();
       return true;
     } catch (e) {

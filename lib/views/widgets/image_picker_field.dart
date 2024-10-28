@@ -1,4 +1,3 @@
-// lib/views/widgets/image_picker_field.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 
@@ -47,8 +46,7 @@ class ImagePickerField extends StatelessWidget {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.file(
-                      File(
-                          imagePath!), // Gunakan Image.file untuk menampilkan file lokal
+                      File(imagePath!),
                       fit: BoxFit.cover,
                     ),
                   )

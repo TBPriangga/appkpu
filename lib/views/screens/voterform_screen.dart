@@ -178,31 +178,41 @@ class _VoterFormScreenState extends State<VoterFormScreen> {
                         onPressed: _viewModel.isLoading
                             ? null
                             : () async {
+                                // Cek apakah ada field yang kosong
+                                final emptyFields = _viewModel.getEmptyFields();
+
+                                if (emptyFields.length > 3) {
+                                  // Jika lebih dari 3 field kosong
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Peringatan'),
+                                      content: const Text('Data belum diisi'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  return;
+                                } else if (emptyFields.isNotEmpty) {
+                                  // Tampilkan snackbar dengan field yang kosong
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Form berikut belum diisi: ${emptyFields.join(", ")}',
+                                      ),
+                                      backgroundColor: const Color(0xffB43F3F),
+                                      duration: const Duration(seconds: 3),
+                                    ),
+                                  );
+                                  return;
+                                }
+
                                 setState(() => _viewModel.isLoading = true);
-
-                                // Validasi gender
-                                if (_viewModel.selectedGender == null) {
-                                  setState(() => _viewModel.isLoading = false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Pilih jenis kelamin'),
-                                      backgroundColor: Color(0xffB43F3F),
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                // Validasi tanggal
-                                if (_viewModel.selectedDate == null) {
-                                  setState(() => _viewModel.isLoading = false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Pilih tanggal pendataan'),
-                                      backgroundColor: Color(0xffB43F3F),
-                                    ),
-                                  );
-                                  return;
-                                }
 
                                 final success = await _viewModel.submitForm();
 

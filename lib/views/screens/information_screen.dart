@@ -11,7 +11,7 @@ class InformationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xffB43F3F),
+        backgroundColor: AppColors.background,
         title: const Text(
           'Informasi Pemilihan Umum',
           style: TextStyle(

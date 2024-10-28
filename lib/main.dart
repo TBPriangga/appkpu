@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kpuapp/views/screens/edit_form_screen.dart';
 import 'package:kpuapp/views/screens/information_screen.dart';
+import 'package:kpuapp/views/screens/voter_list_screen.dart';
 import 'package:kpuapp/views/screens/voterform_screen.dart';
 import 'views/screens/home_page.dart';
 import 'views/screens/splash_screen.dart';
@@ -31,6 +33,17 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/information': (context) => const InformationScreen(),
         '/voter-form': (context) => const VoterFormScreen(),
+        '/voter-list': (context) => const VoterListScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/edit-voter') {
+          final args = settings.arguments as Map<String, dynamic>;
+          final voter = args['voter'];
+          return MaterialPageRoute(
+            builder: (context) => EditVoterScreen(voter: voter),
+          );
+        }
+        return null;
       },
     );
   }

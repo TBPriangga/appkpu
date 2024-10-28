@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../app/constants/colors.dart';
 import '../widgets/button_menu_item.dart';
 import 'information_screen.dart';
+import 'voter_list_screen.dart';
 import 'voterform_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -55,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                     icon: Icons.list_alt,
                     title: 'Lihat Data',
                     onTap: () {
-                      // Navigator.pushNamed(context, VoterListScreen.routePath);
+                      Navigator.pushNamed(context, VoterListScreen.routePath);
                     },
                   ),
                   const SizedBox(height: 30),
@@ -78,9 +80,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushReplacementNamed(
-                                    context, '/splash');
+                                SystemNavigator.pop();
                               },
                               child: const Text('Ya'),
                             ),
